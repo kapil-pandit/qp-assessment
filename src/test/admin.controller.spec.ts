@@ -92,11 +92,16 @@ describe('AdminController', () => {
         { id: 1, name: 'Apple', price: 1.5, quantity: 100 },
         { id: 2, name: 'Banana', price: 0.5, quantity: 200 },
       ];
-      mockAdminService.viewGroceryItems.mockResolvedValue(groceryItems);
+
+      // Mocking the service response
+      mockAdminService.viewGroceryItems = jest.fn().mockResolvedValue(groceryItems);
 
       const result = await controller.viewGroceryItems();
 
+      // Ensure the service method was called
       expect(mockAdminService.viewGroceryItems).toHaveBeenCalled();
+
+      // Validate the returned result
       expect(result).toEqual(groceryItems);
     });
   });
@@ -108,10 +113,13 @@ describe('AdminController', () => {
         price: 2.0,
         quantity: 50,
       };
-      mockAdminService.updateGroceryItem.mockResolvedValue({
+
+      const mockResponse = {
         id,
         ...groceryItemDto,
-      });
+      };
+
+      mockAdminService.updateGroceryItem = jest.fn().mockResolvedValue(mockResponse);
 
       const result = await controller.updateGroceryItem(id, groceryItemDto);
 
@@ -119,20 +127,21 @@ describe('AdminController', () => {
         id,
         groceryItemDto,
       );
-      expect(result).toEqual({ id, ...groceryItemDto });
+      expect(result).toEqual(mockResponse);
     });
   });
+
   describe('deleteGroceryItem', () => {
     it('should call service.deleteGroceryItem with correct id', async () => {
       const id = 1;
-      mockAdminService.deleteGroceryItem.mockResolvedValue({
-        message: 'Item deleted successfully',
-      });
+      const mockResponse = { message: 'Item deleted successfully' };
+
+      mockAdminService.deleteGroceryItem = jest.fn().mockResolvedValue(mockResponse);
 
       const result = await controller.deleteGroceryItem(id);
 
       expect(mockAdminService.deleteGroceryItem).toHaveBeenCalledWith(id);
-      expect(result).toEqual({ message: 'Item deleted successfully' });
+      expect(result).toEqual(mockResponse);
     });
   });
 });

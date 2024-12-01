@@ -26,7 +26,6 @@ export class UserService {
     return this.groceryItemRepository.find();
   }
   async placeOrder(userId: number, groceryItems: { itemId: number; quantity: number }[]) {
-    console.log(":::: groceryItems :::", groceryItems);
     
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {

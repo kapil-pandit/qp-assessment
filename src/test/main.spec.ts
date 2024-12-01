@@ -21,6 +21,7 @@ jest.mock('@nestjs/swagger', () => ({
     addBearerAuth: jest.fn().mockReturnThis(),
     build: jest.fn(),
   })),
+  ApiBearerAuth: jest.fn(), // Mock decorator
 }));
 
 describe('Bootstrap', () => {
@@ -33,17 +34,17 @@ describe('Bootstrap', () => {
     const PORT = 4000;
     process.env.PORT = String(PORT);
 
-    // Import main.ts dynamically to execute the bootstrap function
+    // Dynamically import and run main.ts
     await import('../main');
 
-    // Validate that the app is created
+    // Validate app creation
     expect(NestFactory.create).toHaveBeenCalledWith(AppModule);
 
     // Validate Swagger setup
     expect(SwaggerModule.createDocument).toHaveBeenCalled();
     expect(SwaggerModule.setup).toHaveBeenCalledWith('api', mockApp, expect.anything());
 
-    // Validate that the app is listening on the correct port
+    // Validate app listening on the correct port
     expect(mockApp.listen).toHaveBeenCalledWith(PORT);
   });
 });

@@ -21,7 +21,6 @@ const mockGroceryItemRepository = {
   findOneBy: jest.fn(),
   delete: jest.fn(),
 };
-
 describe('AdminService', () => {
   let service: AdminService;
   let adminRepo: Repository<Admin>;
@@ -33,7 +32,14 @@ describe('AdminService', () => {
       providers: [
         AdminService,
         JwtService,
-
+        {
+          provide: getRepositoryToken(Admin),
+          useValue: mockAdminRepository,
+        },
+        {
+          provide: getRepositoryToken(GroceryItem),
+          useValue: mockGroceryItemRepository,
+        },
       ],
     }).compile();
 
